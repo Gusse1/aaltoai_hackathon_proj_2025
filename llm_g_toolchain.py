@@ -142,13 +142,13 @@ def main():
             })
 
             result = re.sub(r'&quot;', '"', result)  # Replace HTML entities
-            result = re.search(r'(SELECT.*?)(?:;|$)', result, re.DOTALL | re.IGNORECASE).group(1) + ";" # Extract the first complete SQL SELECT query from the result
+            query = re.search(r'(SELECT.*?)(?:;|$)', result, re.DOTALL | re.IGNORECASE).group(1) + ";" # Extract the first complete SQL SELECT query from the result
 
             print("\n=== Generated SQL ===")
-            print(result)
+            print(query)
             
             print("\n=== Query Results ===")
-            table = (db.run(result))
+            table = (db.run(query))
             print(table)
             break
         except Exception as e:
@@ -173,7 +173,7 @@ def main():
                     print("No valid JSON object found.")
                     return None
                 
-                json_string = match[-1]
+                json_string = match[0]
                 #print(f"JSON MATCH: {json_string}")
                 json_object = json.loads(json_string)
                 #print(json_object)
@@ -201,7 +201,7 @@ def main():
     Question: {user_question}                                                                                                                                                               
     Query: {sql_query}
     Data schema: {data_schema}
-    Query result: {result}
+    Query result: {query_output}
     
     Please output only the JSON object with no explanation, tags, or extra text. Follow below format:
 
@@ -230,7 +230,7 @@ def main():
 
     for attempt in range(max_retries):
         try:
-            raw_output = plot_chain.invoke({"user_question": question, "sql_query": result, "data_schema": data_schema, "result": table})
+            raw_output = plot_chain.invoke({"user_question": question, "sql_query": query, "data_schema": data_schema, "query_output": table})
 
             plot_info = extract_plot_info(raw_output)
             print(plot_info)
