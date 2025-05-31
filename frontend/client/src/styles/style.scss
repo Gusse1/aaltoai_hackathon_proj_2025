@@ -9,7 +9,7 @@
 }
 
 .main-content {
-    background-color: $bg-color;
+    background: linear-gradient(to bottom right, darken($lighter-color, 10%), lighten($lighter-color, 5%), $lighter-color, darken($lighter-color, 15%));
     display: flex;
     align-items: center;
     justify-content: center;
@@ -32,7 +32,6 @@
         align-items: center;
         display: flex;
         flex-direction: column;
-        background-color: $bg-color;
         border: none;
         gap: 20px;
         color: $text-color;
@@ -72,7 +71,7 @@
 
         .pre {
             margin: 10px;
-            white-space: pre-wrap; // Wraps text while preserving whitespace
+            white-space: pre-wrap;
             word-wrap: break-word; 
         }
         
