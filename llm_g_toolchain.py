@@ -201,6 +201,7 @@ def main():
     Question: {user_question}                                                                                                                                                               
     Query: {sql_query}
     Data schema: {data_schema}
+    Query result: {result}
     
     Please output only the JSON object with no explanation, tags, or extra text. Follow below format:
 
@@ -229,7 +230,7 @@ def main():
 
     for attempt in range(max_retries):
         try:
-            raw_output = plot_chain.invoke({"user_question": question, "sql_query": result, "data_schema": data_schema})
+            raw_output = plot_chain.invoke({"user_question": question, "sql_query": result, "data_schema": data_schema, "result": table})
 
             plot_info = extract_plot_info(raw_output)
             print(plot_info)
@@ -244,7 +245,7 @@ def main():
                 #print("\n=== Query Results ===")
                 text_response = plot_info.get("text_response") if plot_info else "No response available."
                 print(text_response)
-
+                break
             else:
                 print("YES VISUALIZATION")
                 plot_type = plot_info["plot_type"].lower()

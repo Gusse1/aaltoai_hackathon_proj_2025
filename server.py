@@ -38,6 +38,9 @@ def run_toolchain_post():
             sql_match = re.search(r'=== Generated SQL ===\n(.*?)\n=== Query Results ===', output, re.DOTALL)
             sql = sql_match.group(1).strip() if sql_match else None
 
+            results_match = re.search(r'=== Query Results ===\n(.*)', output, re.DOTALL)
+            query_results = results_match.group(1).strip() if results_match else None
+
             text_match = re.search(r'NO VISUALIZATION\n(.*?)(?:\nError|$)', output, re.DOTALL)
             text_response = text_match.group(1).strip() if text_match else None
             return jsonify({
@@ -45,7 +48,8 @@ def run_toolchain_post():
                 "visualization": False,
                 "results": text_response,
                 "sql": sql,
-                "error": result.stderr
+                "error": result.stderr,
+                "raw_results": query_results
             })
         else:
             # Original SQL and results parsing
