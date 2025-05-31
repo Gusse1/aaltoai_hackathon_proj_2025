@@ -9,3 +9,6 @@ langchain-postgres
 langchain-core
 sqlalchemy
 psycopg2-binary
+pandas
+pydantic
+matplotlib
