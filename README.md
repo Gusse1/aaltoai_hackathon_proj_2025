@@ -9,3 +9,5 @@ To setup the software, please first install the packages from the requirements.t
 You need to configure your PostgreSQL database. Input your PostgreSQL username and password in the setup.env file in root. We have an example of such an env in the file setup.env.example.
 You will also have to setup your huggingface_cli with your own API-token. You may adjust the model used using the same setup.env file to any that supports the huggingface transformers interface.
 This code assumes that you are running an LLM locally on your machine. Running an LLM remotely using e.g. an API-token might need changes to the code.
+
+To start up the software, do python server.py to open up the flask server at localhost:5000 on your root. Then go into frontend/client folder, run npm install and then npm start.
