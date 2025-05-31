@@ -33,16 +33,20 @@ def main():
         if numbers:
             return max(1, min(numbers[-1], 100))  # Take last number and clamp
 
-        print("Warning: No parsable number, defaulting to 5")
-        return 5
+        return -1
 
     limit_prompt = ChatPromptTemplate.from_template("""
+    You are a preprocessing agent, designated to determine how many results the user needs. After you, the
+    input will be sent to another agent which handles the database query.
+
     Respond ONLY with an integer between 1-100 representing how many results to return.
     Use these guidelines IF and ONLY IF the user has not specified a suitable number between 1 and 100:
     - 1 for existence checks
     - 5 for specific queries
     - 10-20 for listings
     - Never exceed 100
+    - If the query cannot be converted into a number in a sensible way, then return -1 AND STOP GENERATING TEXT
+    - STOP when you have found the number from the query which you think is the correct number
 
     Query: {input}
     Number:""")
@@ -58,9 +62,15 @@ def main():
     for attempt in range(max_retries):
         try:
             top_k = limit_chain.invoke({"input": question})
+            if top_k == -1:
+                if attempt < max_retries:
+                    print("Retrying.")
+                else:
+                    print("LLM failed to identify top_k. Closing")
+                    sys.exit(1)
             break  # Success, exit the retry loop
         except Exception as e:
-            print(f"Warning: Attempt {attempt + 1} failed to get number of results from LLM: {e}")
+            print(f"Error: {e}")
             if attempt < max_retries:
                 print("Retrying.")
             else:
