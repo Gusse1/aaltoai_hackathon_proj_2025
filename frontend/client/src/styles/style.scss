@@ -64,6 +64,10 @@
             height: 120px;
             border: 1px solid $darker-color;
             color: $text-color;
+
+            &:hover {
+                background-color: $lighter-color;
+            }
         }
 
         .pre {
