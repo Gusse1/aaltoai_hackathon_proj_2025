@@ -241,13 +241,13 @@ def main():
 
             # Check if output requires visualization or not
             if not plot_info or not plot_info.get("visualization_boolean"):
-                print("NO VISUALIZATION")
+                #print("NO VISUALIZATION")
                 #print("\n=== Query Results ===")
                 text_response = plot_info.get("text_response") if plot_info else "No response available."
                 print(text_response)
                 break
             else:
-                print("YES VISUALIZATION")
+                #print("YES VISUALIZATION")
                 plot_type = plot_info["plot_type"].lower()
                 column_names = plot_info["column_names"]
                 title = plot_info["title"]
@@ -255,7 +255,10 @@ def main():
                 if not column_names or len(column_names) < 2:
                     raise ValueError("At least two column names (x and y) are required.")   
 
-                data = ast.literal_eval(table)
+                if isinstance(table, str):
+                    data = ast.literal_eval(table)
+                else:
+                    data = table
                 df = pd.DataFrame(data, columns=plot_info["column_names"])
                 df = df.round(2)
                 #print("\n=== Query Results ===")
