@@ -17,6 +17,7 @@
     padding: 0;
     flex-direction: column;
     overflow-y: auto;
+    padding-bottom: 70px;
 
     .header {
         height: 60px;
@@ -29,6 +30,7 @@
     }
 
     .chat {
+        padding-top: 80px;
         align-items: center;
         display: flex;
         flex-direction: column;
