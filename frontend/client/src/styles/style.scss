@@ -1,0 +1,63 @@
+@use 'variables' as *;
+@import "~@coreui/coreui/scss/_variables.scss";
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Courier New', Courier, monospace
+}
+
+.main-content {
+    background-color: $bg-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 0;
+    flex-direction: column;
+
+    .header {
+        height: 60px;
+        background-color: $darker-color;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 100;
+        width: 100%;
+    }
+
+    .chat {
+        align-items: center;
+        display: flex;
+        flex-direction: column;
+        background-color: $bg-color;
+        border: none;
+        gap: 20px;
+        color: $text-color;
+        .title {
+            font-weight: 600;
+            font-size: 25px;
+        }
+        .button {
+            background-color: $darker-color;
+            color: $bg-color;
+
+            :hover {
+                background-color: $lighter-color;
+                color: $text-color;
+            }
+        }
+
+        :hover {
+            background-color: $lighter-color;
+        }
+    
+        .textarea {
+            width: 500px;
+            height: 70px;
+            border: 1px solid $darker-color;
+            color: $text-color;
+        }
+    }
+}
