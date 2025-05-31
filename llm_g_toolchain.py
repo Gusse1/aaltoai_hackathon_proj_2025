@@ -259,7 +259,7 @@ def main():
                 df = pd.DataFrame(data, columns=plot_info["column_names"])
                 df = df.round(2)
                 #print("\n=== Query Results ===")
-                print(df)
+                print(df.to_string(index=False))
 
                 x_col = column_names[0]
                 y_col = column_names[1]
