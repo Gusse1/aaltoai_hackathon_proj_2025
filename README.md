@@ -15,3 +15,6 @@ To start up the software, run "python server.py" to open up the Flask server at 
 
 ## Related problems
 We have implemented error catching logic and the agent tries to call the LLM again if it fails to e.g. produce suitable SQL code. However, the agent might still produce faulty results, especially for more difficult questions. When the agent calls the LLM to give the desired number of elements, it sometimes produces unnecessary repetitive output, so we decided to extract only the relevant beginning of the output. We were not able to use smaller number of max_new_tokens (maximum number of output tokens) for the first LLM call, because the second LLM call, which produces the SQL code, required relatively many tokens. We were not able to create separate pipes for both LLM calls because in that case we ran out of GPU VRAM, so we had to adapt.
+
+## Read more
+https://github.com/Gusse1/aaltoai_hackathon_proj_2025/blob/main/frontend/client/README.md
