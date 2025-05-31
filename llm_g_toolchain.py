@@ -162,12 +162,12 @@ def main():
         marker = "Result:"
         marker_pos = text.find(marker)
 
-        if marker_pos != 0:  # If marker is found
+        if marker_pos != -1:  # If marker is found
 
             try:
                 remaining_text = text[marker_pos + len(marker):]  # Get text after marker
                 #print(remaining_text)
-                match = re.findall(r'\{.*\}', remaining_text, re.DOTALL)
+                match = re.findall(r'\{.*?\}', remaining_text, re.DOTALL)
                 #print(match)
                 if not match:
                     print("No valid JSON object found.")
@@ -239,10 +239,11 @@ def main():
             file_path = os.path.join(output_dir, filename)
 
             # Check if output requires visualization or not
-            if plot_info["visualization_boolean"] == False:
+            if not plot_info or not plot_info.get("visualization_boolean"):
                 print("NO VISUALIZATION")
                 #print("\n=== Query Results ===")
-                print(plot_info["text_response"])
+                text_response = plot_info.get("text_response") if plot_info else "No response available."
+                print(text_response)
 
             else:
                 print("YES VISUALIZATION")
@@ -276,6 +277,8 @@ def main():
 
                     plt.bar(x, y_values, width=0.5)
                     plt.xticks(ticks=x, labels=x_labels, rotation=45, ha='right')
+                else:
+                    break
 
                 plt.title(title)
                 plt.xlabel(x_col)

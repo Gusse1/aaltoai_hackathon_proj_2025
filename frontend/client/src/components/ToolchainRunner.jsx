@@ -14,6 +14,8 @@ function ToolchainRunner() {
   const [showResults, setShowResults] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
+  const [hasVisualization, setHasVisualization] = useState(false);
+  const [textResponse, setTextResponse] = useState('');
 
   const runToolchain = async () => {
     setIsLoading(true);
@@ -22,13 +24,25 @@ function ToolchainRunner() {
         'http://localhost:5000/run-toolchain',
         { input }
       );
-      setQueryResults(response.data.results || response.data.error);
+
+      setHasVisualization(response.data.visualization || false);
+      setTextResponse(response.data.text_response || '');
+
+      if (response.data.visualization) {
+        setImageUrl(figurePng);
+      } else {
+        setImageUrl('');
+      }
+
+      setQueryResults(response.data.results || response.data.error || textResponse);
       setSql(response.data.sql || 'No SQL generated');
       setShowResults(true);
       setShowSql(false);
     } catch (error) {
       setQueryResults(`Error: ${error.message}`);
       setSql('');
+      setHasVisualization(false);
+      setImageUrl('');
     } finally {
       setIsLoading(false);
     }
@@ -84,7 +98,7 @@ function ToolchainRunner() {
         <CSpinner className="spinner"></CSpinner>
       )}
 
-      {(queryResults || sql) && (
+      {(queryResults || sql || hasVisualization) && (
         <div style={{ 
           marginTop: '1rem',
           width: '50%',
@@ -167,24 +181,27 @@ function ToolchainRunner() {
               }}>{sql}</pre>
             </CCard>
           </CCollapse>
-          
-    <div style={{ marginTop: '1rem', width: '100%', maxWidth: '100%' }}>
-      <div style={{ 
-        display: 'flex', 
-        alignItems: 'center', 
-        marginBottom: '0.5rem'
-      }}>
-      <span style={{ fontWeight: 'bold' }}>Generated Image</span>
+
+          {/* Visualization Section - Only shown when hasVisualization is true */}
+          {hasVisualization && (
+            <div style={{ marginTop: '1rem', width: '100%', maxWidth: '100%' }}>
+              <div style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                marginBottom: '0.5rem'
+              }}>
+                <span style={{ fontWeight: 'bold' }}>Generated Image</span>
+              </div>
+              <CCard style={{ padding: '1rem' }}>
+                <img 
+                  src={imageUrl} 
+                  alt="Generated visualization" 
+                  style={{ maxWidth: '100%' }}
+                />
+              </CCard>
+            </div>
+          )}
         </div>
-          <CCard style={{ padding: '1rem' }}>
-            <img 
-              src={figurePng} 
-              alt="Generated visualization" 
-              style={{ maxWidth: '100%' }}
-            />
-          </CCard>
-        </div>
-      </div>
       )}
     </CForm>
   );
