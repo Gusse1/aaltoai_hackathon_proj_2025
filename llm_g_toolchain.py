@@ -21,7 +21,7 @@ def main():
         model="deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
         device_map="auto",
         max_new_tokens=2048,
-        temperature=0.1
+        temperature=0.15
     )
     llm = HuggingFacePipeline(pipeline=pipe)
 
@@ -61,9 +61,11 @@ def main():
             break  # Success, exit the retry loop
         except Exception as e:
             print(f"Warning: Attempt {attempt + 1} failed to get number of results from LLM: {e}")
-            if attempt == max_retries - 1:
-                print("Max retries reached. Falling back to default top_k=5.")
-                top_k = 5
+            if attempt < max_retries:
+                print("Retrying.")
+            else:
+                print("LLM failed to identify top_k. Closing")
+                sys.exit(1)
 
     available_tables = get_available_tables()
     print(f"Available tables: {available_tables}")

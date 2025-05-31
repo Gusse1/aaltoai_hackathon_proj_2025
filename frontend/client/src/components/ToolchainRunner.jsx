@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import InputField from "../components/InputField.tsx";
+import { CButton, CCard, CCardTitle, CForm } from "@coreui/react";
 
 function ToolchainRunner() {
   const [input, setInput] = useState('');
@@ -9,18 +11,11 @@ function ToolchainRunner() {
   const runToolchain = async () => {
     setIsLoading(true);
     try {
-      // For GET version:
-      // const response = await axios.get(
-      //   'http://localhost:5000/run-toolchain',
-      //   { params: { input } }
-      // );
-
-      // For POST version:
+      console.log('Sending input:', input); // Debug log
       const response = await axios.post(
         'http://localhost:5000/run-toolchain',
         { input }
       );
-
       setOutput(response.data.output || response.data.error);
     } catch (error) {
       setOutput(`Error: ${error.message}`);
@@ -29,19 +24,34 @@ function ToolchainRunner() {
     }
   };
 
+  const handleInputChange = (e) => {
+    setInput(e.target.value);
+  };
+
   return (
-    <div>
-      <input
-        type="text"
+    <CForm className="chat">
+      <CCardTitle className="title">Toolchain Runner</CCardTitle>
+
+      <InputField 
         value={input}
-        onChange={(e) => setInput(e.target.value)}
+        onChange={handleInputChange}
         placeholder="Enter input for LLM toolchain"
       />
-      <button onClick={runToolchain} disabled={isLoading}>
+
+      <CButton 
+        className="button" 
+        onClick={runToolchain} 
+        disabled={isLoading}
+      >
         {isLoading ? 'Running...' : 'Run Toolchain'}
-      </button>
-      <pre>{output}</pre>
-    </div>
+      </CButton>
+
+      {output && (
+        <CCard className="output-card">
+          <pre>{output}</pre>
+        </CCard>
+      )}
+    </CForm>
   );
 }
 
