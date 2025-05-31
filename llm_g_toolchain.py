@@ -149,7 +149,7 @@ def main():
             
             print("\n=== Query Results ===")
             table = (db.run(query))
-            print(table)
+            #print(table)
             break
         except Exception as e:
             print(f"Error: {str(e)}")
