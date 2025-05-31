@@ -1,13 +1,13 @@
 import sys
 import re
+import torch
 from transformers import pipeline
 from langchain_core.prompts import PromptTemplate, ChatPromptTemplate
 from langchain_huggingface import HuggingFacePipeline
 from langchain_community.utilities import SQLDatabase
 from langchain.chains import create_sql_query_chain
-from sqlalchemy import create_engine, inspect
 from langchain_core.output_parsers import StrOutputParser
-import torch
+from sqlalchemy import create_engine, inspect
 import os
 from dotenv import load_dotenv
 
