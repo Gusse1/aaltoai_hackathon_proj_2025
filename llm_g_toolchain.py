@@ -9,8 +9,14 @@ from sqlalchemy import create_engine, inspect
 from langchain_core.output_parsers import StrOutputParser
 import gc
 import torch
+import os
+from dotenv import load_dotenv
 
-DB_URI = "postgresql://llm_user:secure_password123@localhost:5432/chinook"
+load_dotenv("setup.env")
+db_uri = os.getenv("DATABASE_URI")
+hf_model = os.getenv("HF_MODEL_NAME")
+
+DB_URI = db_uri
 
 def get_available_tables():
     engine = create_engine(DB_URI)
@@ -72,7 +78,7 @@ def main():
 
     pipe = pipeline(
         "text-generation",
-        model="deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+        model=hf_model,
         device_map="auto",
         max_new_tokens=512,
         temperature=0.15

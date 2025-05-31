@@ -1,0 +1,18 @@
+# Ignore environment files
+.env
+*.env
+setup.env
+.env.local
+.env*.local
+
+# Ignore database files
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+*.sql
+
+# Optional: Ignore IDE/editor files (common additions)
+.idea/
+.vscode/
+*.swp
