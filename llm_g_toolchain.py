@@ -38,7 +38,7 @@ def main():
 
     limit_prompt = ChatPromptTemplate.from_template("""
     Respond ONLY with an integer between 1-100 representing how many results to return.
-    Use these guidelines IF and ONLY IF the user has not specifieda suitable number between 1 and 100:
+    Use these guidelines IF and ONLY IF the user has not specified a suitable number between 1 and 100:
     - 1 for existence checks
     - 5 for specific queries
     - 10-20 for listings
@@ -49,8 +49,21 @@ def main():
     limit_chain = limit_prompt | llm | StrOutputParser() | extract_number
     if len(sys.argv) > 1:
         question = " ".join(sys.argv[1:])
+    else:
+        print("Please provide a suitable question as command line argument.")
+        sys.exit(1)
+    max_retries = 3
+    top_k = None
 
-    top_k = limit_chain.invoke({"input": question})
+    for attempt in range(max_retries):
+        try:
+            top_k = limit_chain.invoke({"input": question})
+            break  # Success, exit the retry loop
+        except Exception as e:
+            print(f"Warning: Attempt {attempt + 1} failed to get number of results from LLM: {e}")
+            if attempt == max_retries - 1:
+                print("Max retries reached. Falling back to default top_k=5.")
+                top_k = 5
 
     available_tables = get_available_tables()
     print(f"Available tables: {available_tables}")
@@ -75,26 +88,26 @@ def main():
 
     chain = create_sql_query_chain(llm, db, prompt=prompt)
 
-    if len(sys.argv) > 1:
-        question = " ".join(sys.argv[1:])
+    for attempt in range(max_retries):
+        try:
+            result = chain.invoke({
+                "question": question,
+                "top_k": top_k
+            })
 
-    try:
-        result = chain.invoke({
-            "question": question,
-            "top_k": top_k
-        })
+            result = re.sub(r'&quot;', '"', result)  # Replace HTML entities
+            result = re.search(r'(SELECT.*?)(?:;|$)', result, re.DOTALL | re.IGNORECASE).group(1) + ";" # Extract the first complete SQL SELECT query from the result
 
-        result = re.sub(r'&quot;', '"', result)  # Replace HTML entities
-        result = re.search(r'(SELECT.*?)(?:;|$)', result, re.DOTALL | re.IGNORECASE).group(1) + ";" # Extract the first complete SQL SELECT query from the result
+            print("\n=== Generated SQL ===")
+            print(result)
 
-        print("\n=== Generated SQL ===")
-        print(result)
-
-        print("\n=== Query Results ===")
-        print(db.run(result))
-
-    except Exception as e:
-        print(f"Error: {str(e)}")
+            print("\n=== Query Results ===")
+            print(db.run(result))
+            break
+        except Exception as e:
+            print(f"Error: {str(e)}")
+            if attempt < max_retries:
+                print("Retrying...")
 
 if __name__ == "__main__":
     main()
