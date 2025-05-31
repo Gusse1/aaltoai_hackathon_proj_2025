@@ -155,6 +155,8 @@ def main():
             print(f"Error: {str(e)}")
             if attempt < max_retries:
                 print("Retrying...")
+            else:
+                sys.exit(1)
 
     def extract_plot_info(text: str) -> Union[dict, None]:
 
