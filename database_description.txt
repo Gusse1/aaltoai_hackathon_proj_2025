@@ -1,4 +1,4 @@
-You have a database like this:
+This is the schema for Chinook dataset:
 
 Table: Artist
 
