@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import InputField from "../components/InputField.tsx";
-import { CButton, CCard, CCardTitle, CForm, CCollapse } from "@coreui/react";
+import { CButton, CCard, CCardTitle, CForm, CCollapse, CSpinner } from "@coreui/react";
 import { cilTerminal, cilCode, cilChevronBottom, cilChevronTop } from "@coreui/icons";
 import { CIcon } from "@coreui/icons-react";
 
@@ -78,6 +78,9 @@ function ToolchainRunner() {
       >
         {isLoading ? 'Pondering...' : 'Submit'}
       </CButton>
+      {isLoading && (
+        <CSpinner className="spinner"></CSpinner>
+      )}
 
       {(queryResults || sql) && (
         <div style={{ 

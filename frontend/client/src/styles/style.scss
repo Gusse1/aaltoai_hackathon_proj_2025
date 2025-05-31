@@ -39,9 +39,6 @@
         .title {
             font-weight: 600;
             font-size: 25px;
-            &:hover {
-                background-color: $bg-color;
-            }
         }
         .btn.button {
             background-color: $darker-color;
@@ -60,10 +57,6 @@
                 width: 160px;
             }
         }
-
-        /*:hover {
-            background-color: $lighter-color;
-        }*/
     
         .textarea {
             width: 1000px;
@@ -77,6 +70,12 @@
             margin: 10px;
             white-space: pre-wrap; // Wraps text while preserving whitespace
             word-wrap: break-word; 
+        }
+        
+        .spinner {
+            color: $darker-color;
+            width: 2rem;
+            height: 2rem;
         }
     }
 }
