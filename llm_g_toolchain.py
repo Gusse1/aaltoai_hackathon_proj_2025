@@ -241,13 +241,13 @@ def main():
 
             # Check if output requires visualization or not
             if not plot_info or not plot_info.get("visualization_boolean"):
-                #print("NO VISUALIZATION")
+                print("NO VISUALIZATION")
                 #print("\n=== Query Results ===")
                 text_response = plot_info.get("text_response") if plot_info else "No response available."
                 print(text_response)
                 break
             else:
-                #print("YES VISUALIZATION")
+                print("YES VISUALIZATION")
                 plot_type = plot_info["plot_type"].lower()
                 column_names = plot_info["column_names"]
                 title = plot_info["title"]
