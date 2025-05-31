@@ -39,14 +39,25 @@
         .title {
             font-weight: 600;
             font-size: 25px;
+            &:hover {
+                background-color: $bg-color;
+            }
         }
-        .button {
+        .btn.button {
             background-color: $darker-color;
             color: $bg-color;
+            border: 1px solid transparent;
+            width: 160px;
 
-            :hover {
-                background-color: $lighter-color;
-                color: $text-color;
+            &:hover {
+                background-color: lighten($darker-color, 8%);
+                border: 1px solid transparent;
+                width: 160px;
+            }
+            &:focus,
+            &:active {
+                border: 1px solid transparent;
+                width: 160px;
             }
         }
 
@@ -60,6 +71,12 @@
             height: 120px;
             border: 1px solid $darker-color;
             color: $text-color;
+        }
+
+        .pre {
+            margin: 10px;
+            white-space: pre-wrap; // Wraps text while preserving whitespace
+            word-wrap: break-word; 
         }
     }
 }

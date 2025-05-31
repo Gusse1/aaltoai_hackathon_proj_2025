@@ -60,7 +60,7 @@ function ToolchainRunner() {
 
       {output && (
         <CCard className="output-card textarea">
-          <pre>{output}</pre>
+          <pre className='pre'>{output}</pre>
         </CCard>
       )}
     </CForm>
