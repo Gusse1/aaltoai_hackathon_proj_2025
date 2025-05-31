@@ -10,7 +10,6 @@ from langchain_core.output_parsers import StrOutputParser
 from sqlalchemy import create_engine, inspect
 import os
 from dotenv import load_dotenv
-
 import ast
 import pandas as pd
 from pydantic import BaseModel, Field
@@ -18,7 +17,6 @@ from enum import Enum
 from typing import List, Union
 import json
 import matplotlib.pyplot as plt
-import os
 
 load_dotenv("setup.env")
 db_uri = os.getenv("DATABASE_URI")
