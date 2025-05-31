@@ -19,7 +19,7 @@ def get_available_tables():
 
 def main():
     def extract_number(text: str) -> int:
-        print(f"\n=== DEBUG RAW LLM OUTPUT ===\n{text}\n{'='*30}")
+        #print(f"\n=== DEBUG RAW LLM OUTPUT ===\n{text}\n{'='*30}")
 
         # Extract first number after the marker text
         marker = "THE FINAL OUTPUT NUMBER BASED ON THIS USER INPUT IS:"
@@ -29,10 +29,11 @@ def main():
             remaining_text = text[marker_pos + len(marker):]  # Get text after marker
             numbers = [int(match) for match in re.findall(r'\b\d+\b', remaining_text)]
             if numbers:
-                print(numbers)
+                #print(numbers)
                 return numbers[0]  # Take first number after marker and clamp
 
         return 0  # Return 0 if marker not found or no numbers after it
+
     limit_prompt = ChatPromptTemplate.from_template("""
     You are a strict preprocessing agent. Your ONLY job is to determine how many results the user wants.
 
@@ -72,7 +73,6 @@ def main():
     pipe = pipeline(
         "text-generation",
         model="deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
-        #model="meta-llama/Llama-3.1-8B",
         device_map="auto",
         max_new_tokens=512,
         temperature=0.15
@@ -88,29 +88,19 @@ def main():
     max_retries = 3
     top_k = None
 
-    #for attempt in range(max_retries):
     try:
         top_k = int(limit_chain.invoke({"input": question}))
-        print("TOP K IS THIS NUMBER!!!!!  ", top_k)
         if top_k == 0:
-            #if attempt < max_retries-1:
-            #    print("Retrying.")
-            #else:
             print("LLM failed to identify top_k. Closing")
             sys.exit(1)
         else:
-            #break
             pass
     except Exception as e:
         print(f"Error: {e}")
-        #if attempt < max_retries:
-        #    print("Retrying.")
-        #else:
         print("LLM failed to identify top_k. Closing")
         sys.exit(1)
 
     available_tables = get_available_tables()
-    print(f"Available tables: {available_tables}")
     db = SQLDatabase.from_uri(
         DB_URI,
         include_tables=None,  # None includes all tables
