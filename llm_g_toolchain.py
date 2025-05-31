@@ -5,7 +5,7 @@ from langchain_core.prompts import PromptTemplate, ChatPromptTemplate
 from langchain_huggingface import HuggingFacePipeline
 from langchain_community.utilities import SQLDatabase
 from langchain.chains import create_sql_query_chain
-from sqlalchemy import create_engine, inspect, MetaData
+from sqlalchemy import create_engine, inspect
 from langchain_core.output_parsers import StrOutputParser
 
 DB_URI = "postgresql://llm_user:secure_password123@localhost:5432/chinook"
@@ -38,7 +38,7 @@ def main():
 
     limit_prompt = ChatPromptTemplate.from_template("""
     Respond ONLY with an integer between 1-100 representing how many results to return.
-    Use these guidelines:
+    Use these guidelines IF and ONLY IF the user has not specifieda suitable number between 1 and 100:
     - 1 for existence checks
     - 5 for specific queries
     - 10-20 for listings
@@ -57,7 +57,7 @@ def main():
     db = SQLDatabase.from_uri(
         DB_URI,
         include_tables=None,  # None includes all tables
-        sample_rows_in_table_info=5,
+        sample_rows_in_table_info=5
     )
 
     prompt = PromptTemplate.from_template("""
