@@ -74,7 +74,7 @@ function ToolchainRunner() {
       <CButton 
         className="button" 
         onClick={runToolchain} 
-        disabled={isLoading}
+        disabled={isLoading || input.trim() === ''}
       >
         {isLoading ? 'Pondering...' : 'Submit'}
       </CButton>

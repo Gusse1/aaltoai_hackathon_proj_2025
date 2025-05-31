@@ -5,7 +5,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Courier New', Courier, monospace
+    font-family: 'Courier New', Courier, monospace;
 }
 
 .main-content {
@@ -45,7 +45,7 @@
             border: 1px solid transparent;
             width: 160px;
 
-            &:hover {
+            &:hover:not([disabled]) {
                 background-color: lighten($darker-color, 8%);
                 border: 1px solid transparent;
                 width: 160px;
@@ -54,6 +54,10 @@
             &:active {
                 border: 1px solid transparent;
                 width: 160px;
+            }
+            &:disabled {
+                cursor: not-allowed !important;
+                pointer-events: auto !important;
             }
         }
     
