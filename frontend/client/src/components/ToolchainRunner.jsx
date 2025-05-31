@@ -16,6 +16,7 @@ function ToolchainRunner() {
   const [imageUrl, setImageUrl] = useState('');
   const [hasVisualization, setHasVisualization] = useState(false);
   const [textResponse, setTextResponse] = useState('');
+  const [imageModule, setImageModule] = useState(null);
 
   const runToolchain = async () => {
     setIsLoading(true);
@@ -29,9 +30,10 @@ function ToolchainRunner() {
       setTextResponse(response.data.text_response || '');
 
       if (response.data.visualization) {
-        setImageUrl(figurePng);
-      } else {
-        setImageUrl('');
+        const freshImage = await import('../figure.png');
+        setImageModule(freshImage.default);
+        } else {
+        setImageModule(null);
       }
 
       setQueryResults(response.data.results || response.data.error || textResponse);
@@ -183,25 +185,22 @@ function ToolchainRunner() {
           </CCollapse>
 
           {/* Visualization Section - Only shown when hasVisualization is true */}
-          {hasVisualization && (
+          {hasVisualization && imageModule && (
             <div style={{ marginTop: '1rem', width: '100%', maxWidth: '100%' }}>
-              <div style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                marginBottom: '0.5rem'
-              }}>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.5rem' }}>
                 <span style={{ fontWeight: 'bold' }}>Generated Image</span>
               </div>
               <CCard style={{ padding: '1rem' }}>
                 <img 
-                  src={imageUrl} 
+                  src={imageModule} 
                   alt="Generated visualization" 
                   style={{ maxWidth: '100%' }}
+                  key={Date.now()} // Force new instance each time
                 />
               </CCard>
             </div>
           )}
-        </div>
+      </div>
       )}
     </CForm>
   );
