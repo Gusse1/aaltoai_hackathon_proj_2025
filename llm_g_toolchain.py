@@ -7,7 +7,6 @@ from langchain_community.utilities import SQLDatabase
 from langchain.chains import create_sql_query_chain
 from sqlalchemy import create_engine, inspect
 from langchain_core.output_parsers import StrOutputParser
-import gc
 import torch
 import os
 from dotenv import load_dotenv
