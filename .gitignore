@@ -12,7 +12,6 @@ setup.env
 *.sqlite3
 *.sql
 
-# Optional: Ignore IDE/editor files (common additions)
 .idea/
 .vscode/
 *.swp
