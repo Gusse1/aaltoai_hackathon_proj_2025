@@ -298,5 +298,7 @@ def main():
             print(f"Error: {str(e)}")
             if attempt < max_retries:
                 print("Retrying...")
+            else:
+                sys.exit(1)
 if __name__ == "__main__":
     main()
