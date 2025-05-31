@@ -205,8 +205,8 @@ def main():
     Please output only the JSON object with no explanation, tags, or extra text. Follow below format:
 
     {{
-    "visualization_boolean"; true,
-    "plot_type": "BAR",
+    "visualization_boolean": true,
+    "plot_type": "bar",
     "column_names": ["column1", "column2"],
     "title": "Descriptive plot title",
     "text_response": null
@@ -215,7 +215,7 @@ def main():
     OR
 
     {{
-    "visualization_boolean"; false,
+    "visualization_boolean": false,
     "plot_type": null,
     "column_names": null,
     "title": null,
@@ -246,7 +246,7 @@ def main():
 
             else:
                 print("YES VISUALIZATION")
-                plot_type = plot_info["plot_type"]
+                plot_type = plot_info["plot_type"].lower()
                 column_names = plot_info["column_names"]
                 title = plot_info["title"]
 
@@ -267,8 +267,7 @@ def main():
                 plt.figure(figsize=(10, 6))
 
                 if plot_type == "line":
-                    for y_col in y_cols:
-                        plt.plot(df[x_col], df[y_col], label=y_col)
+                    plt.plot(df[x_col], df[y_col])
                 elif plot_type == "bar":
                     x_labels = df[column_names[0]]
                     y_values = df[column_names[1]]
