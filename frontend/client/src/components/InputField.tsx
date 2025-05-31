@@ -17,7 +17,7 @@ const InputField: React.FC<InputFieldProps> = ({
       value={value}
       onChange={onChange}
       placeholder={placeholder}
-      className="input-field"
+      className="textarea"
       style={{ 
         resize: 'vertical'   // Allows user to resize vertically
       }}

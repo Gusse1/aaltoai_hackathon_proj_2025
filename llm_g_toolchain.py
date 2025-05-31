@@ -7,6 +7,8 @@ from langchain_community.utilities import SQLDatabase
 from langchain.chains import create_sql_query_chain
 from sqlalchemy import create_engine, inspect
 from langchain_core.output_parsers import StrOutputParser
+import gc
+import torch
 
 DB_URI = "postgresql://llm_user:secure_password123@localhost:5432/chinook"
 
@@ -16,40 +18,67 @@ def get_available_tables():
     return inspector.get_table_names()
 
 def main():
+    def extract_number(text: str) -> int:
+        print(f"\n=== DEBUG RAW LLM OUTPUT ===\n{text}\n{'='*30}")
+
+        # Extract first number after the marker text
+        marker = "THE FINAL OUTPUT NUMBER BASED ON THIS USER INPUT IS:"
+        marker_pos = text.find(marker)
+
+        if marker_pos != 0:  # If marker is found
+            remaining_text = text[marker_pos + len(marker):]  # Get text after marker
+            numbers = [int(match) for match in re.findall(r'\b\d+\b', remaining_text)]
+            if numbers:
+                print(numbers)
+                return numbers[0]  # Take first number after marker and clamp
+
+        return 0  # Return 0 if marker not found or no numbers after it
+    limit_prompt = ChatPromptTemplate.from_template("""
+    You are a strict preprocessing agent. Your ONLY job is to determine how many results the user wants.
+
+    #RULES:
+    If the user clearly asks for a number of results (e.g., "top 5", "show 20", "I want 3"), return that number.
+    If there is not a number very clearly mentioned, immediately give 0 as output.
+    Do NOT guess or infer. Only extract the number from user input or return 0.
+
+    FORMAT:
+    Return ONLY the number. No text, no explanation, no punctuation.
+
+    EXAMPLES:
+    User: Give me 3 best tracks
+    Output: 3
+
+    User: List top 10 albums
+    Output: 10
+
+    User: Who are the best artists?
+    Output: 0
+
+    User: something
+    Output: 0
+
+    User: I want 1000 rows
+    Output: 100
+
+    User: Which tracks are good?
+    Output: 0
+
+    ## EXAMPLES END HERE
+
+    HERE IS THE REAL USER INPUT: {input}
+    THE FINAL OUTPUT NUMBER BASED ON THIS USER INPUT IS: 
+    """)
+
     pipe = pipeline(
         "text-generation",
         model="deepseek-ai/DeepSeek-R1-Distill-Qwen-32B",
+        #model="meta-llama/Llama-3.1-8B",
         device_map="auto",
-        max_new_tokens=2048,
+        max_new_tokens=512,
         temperature=0.15
     )
     llm = HuggingFacePipeline(pipeline=pipe)
 
-    def extract_number(text: str) -> int:
-        print(f"\n=== DEBUG RAW LLM OUTPUT ===\n{text}\n{'='*30}")
-
-        # First try: Extract last number in output (most likely the final answer)
-        numbers = [int(match) for match in re.findall(r'\b\d+\b', text)]
-        if numbers:
-            return max(1, min(numbers[-1], 100))  # Take last number and clamp
-
-        return -1
-
-    limit_prompt = ChatPromptTemplate.from_template("""
-    You are a preprocessing agent, designated to determine how many results the user needs. After you, the
-    input will be sent to another agent which handles the database query.
-
-    Respond ONLY with an integer between 1-100 representing how many results to return.
-    Use these guidelines IF and ONLY IF the user has not specified a suitable number between 1 and 100:
-    - 1 for existence checks
-    - 5 for specific queries
-    - 10-20 for listings
-    - Never exceed 100
-    - If the query cannot be converted into a number in a sensible way, then return -1 AND STOP GENERATING TEXT
-    - STOP when you have found the number from the query which you think is the correct number
-
-    Query: {input}
-    Number:""")
     limit_chain = limit_prompt | llm | StrOutputParser() | extract_number
     if len(sys.argv) > 1:
         question = " ".join(sys.argv[1:])
@@ -59,23 +88,26 @@ def main():
     max_retries = 3
     top_k = None
 
-    for attempt in range(max_retries):
-        try:
-            top_k = limit_chain.invoke({"input": question})
-            if top_k == -1:
-                if attempt < max_retries:
-                    print("Retrying.")
-                else:
-                    print("LLM failed to identify top_k. Closing")
-                    sys.exit(1)
-            break  # Success, exit the retry loop
-        except Exception as e:
-            print(f"Error: {e}")
-            if attempt < max_retries:
-                print("Retrying.")
-            else:
-                print("LLM failed to identify top_k. Closing")
-                sys.exit(1)
+    #for attempt in range(max_retries):
+    try:
+        top_k = int(limit_chain.invoke({"input": question}))
+        print("TOP K IS THIS NUMBER!!!!!  ", top_k)
+        if top_k == 0:
+            #if attempt < max_retries-1:
+            #    print("Retrying.")
+            #else:
+            print("LLM failed to identify top_k. Closing")
+            sys.exit(1)
+        else:
+            #break
+            pass
+    except Exception as e:
+        print(f"Error: {e}")
+        #if attempt < max_retries:
+        #    print("Retrying.")
+        #else:
+        print("LLM failed to identify top_k. Closing")
+        sys.exit(1)
 
     available_tables = get_available_tables()
     print(f"Available tables: {available_tables}")

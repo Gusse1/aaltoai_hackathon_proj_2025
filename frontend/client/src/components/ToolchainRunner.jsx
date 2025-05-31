@@ -33,6 +33,18 @@ function ToolchainRunner() {
       <CCardTitle className="title">Toolchain Runner</CCardTitle>
 
       <InputField 
+        style={{ 
+          maxHeight: '400px',
+          width: '50%',
+          maxWidth: '50%',
+          overflow: 'auto',
+          whiteSpace: 'pre-wrap',
+          wordBreak: 'break-word',
+          overflowWrap: 'anywhere',
+          padding: '16px',
+          fontFamily: 'monospace',
+          backgroundColor: '#f8f9fa'
+        }}
         value={input}
         onChange={handleInputChange}
         placeholder="Enter input for LLM toolchain"
@@ -47,8 +59,25 @@ function ToolchainRunner() {
       </CButton>
 
       {output && (
-        <CCard className="output-card">
-          <pre>{output}</pre>
+        <CCard className="output-card" style={{ 
+          maxHeight: '400px',
+          width: '50%',
+          maxWidth: '50%',
+          overflow: 'auto',
+          whiteSpace: 'pre-wrap',
+          wordBreak: 'break-word',
+          overflowWrap: 'anywhere',
+          padding: '16px',
+          fontFamily: 'monospace',
+          backgroundColor: '#f8f9fa'
+        }}>
+          <pre style={{ 
+            margin: 0,
+            padding: 0,
+            width: '100%',
+            maxWidth: '100%',
+            boxSizing: 'border-box'
+          }}>{output}</pre>
         </CCard>
       )}
     </CForm>
