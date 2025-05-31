@@ -146,7 +146,8 @@ def main():
 
             print("\n=== Generated SQL ===")
             print(result)
-
+            
+            print("\n=== Query Results ===")
             table = (db.run(result))
             print(table)
             break
@@ -232,62 +233,62 @@ def main():
 
             plot_info = extract_plot_info(raw_output)
             print(plot_info)
-            break  # Success, exit the retry loop
+
+            output_dir = "frontend/client/src/"
+            filename = "figure.png"
+            file_path = os.path.join(output_dir, filename)
+
+            # Check if output requires visualization or not
+            if plot_info["visualization_boolean"] == False:
+                print("NO VISUALIZATION")
+                #print("\n=== Query Results ===")
+                print(plot_info["text_response"])
+
+            else:
+                print("YES VISUALIZATION")
+                plot_type = plot_info["plot_type"]
+                column_names = plot_info["column_names"]
+                title = plot_info["title"]
+
+                if not column_names or len(column_names) < 2:
+                    raise ValueError("At least two column names (x and y) are required.")   
+
+                data = ast.literal_eval(table)
+                df = pd.DataFrame(data, columns=plot_info["column_names"])
+                df = df.round(2)
+                #print("\n=== Query Results ===")
+                print(df)
+
+                x_col = column_names[0]
+                y_col = column_names[1]
+
+                #print(x_col)
+                #print(y_col)
+                plt.figure(figsize=(10, 6))
+
+                if plot_type == "line":
+                    for y_col in y_cols:
+                        plt.plot(df[x_col], df[y_col], label=y_col)
+                elif plot_type == "bar":
+                    x_labels = df[column_names[0]]
+                    y_values = df[column_names[1]]
+
+                    x = range(len(df))  # numeric positions for bars
+
+                    plt.bar(x, y_values, width=0.5)
+                    plt.xticks(ticks=x, labels=x_labels, rotation=45, ha='right')
+
+                plt.title(title)
+                plt.xlabel(x_col)
+                plt.ylabel(y_col)
+                plt.tight_layout()
+                plt.grid(axis='y', linestyle='--', alpha=0.7)
+                plt.savefig(file_path, dpi=300)
+                plt.show()
+                break
         except Exception as e:
             print(f"Error: {str(e)}")
             if attempt < max_retries:
                 print("Retrying...")
-
-    output_dir = "frontend/client/src/"
-    filename = "figure.png"
-    file_path = os.path.join(output_dir, filename)
-
-    print("\n=== Query Results ===")
-    # Check if output requires visualization or not
-    if plot_info["visualization_boolean"] == False:
-        print("NO VISUALIZATION")
-        print(plot_info["text_response"])
-
-    else:
-        print("YES VISUALIZATION")
-        plot_type = plot_info["plot_type"]
-        column_names = plot_info["column_names"]
-        title = plot_info["title"]
-
-        if not column_names or len(column_names) < 2:
-            raise ValueError("At least two column names (x and y) are required.")   
-
-        data = ast.literal_eval(table)
-        df = pd.DataFrame(data, columns=plot_info["column_names"])
-        df = df.round(2)
-        print(df)
-
-        x_col = column_names[0]
-        y_col = column_names[1]
-
-        print(x_col)
-        print(y_col)
-        plt.figure(figsize=(10, 6))
-
-        if plot_type == "line":
-            for y_col in y_cols:
-                plt.plot(df[x_col], df[y_col], label=y_col)
-        elif plot_type == "bar":
-            x_labels = df[column_names[0]]
-            y_values = df[column_names[1]]
-
-            x = range(len(df))  # numeric positions for bars
-
-            plt.bar(x, y_values, width=0.5)
-            plt.xticks(ticks=x, labels=x_labels, rotation=45, ha='right')
-
-        plt.title(title)
-        plt.xlabel(x_col)
-        plt.ylabel(y_col)
-        plt.tight_layout()
-        plt.grid(axis='y', linestyle='--', alpha=0.7)
-        plt.savefig(file_path, dpi=300)
-        plt.show()
-
 if __name__ == "__main__":
     main()

@@ -167,26 +167,24 @@ function ToolchainRunner() {
               }}>{sql}</pre>
             </CCard>
           </CCollapse>
-          {imageUrl && (
-  <div style={{ marginTop: '1rem', width: '50%', maxWidth: '50%' }}>
-    <div style={{ 
-      display: 'flex', 
-      alignItems: 'center', 
-      marginBottom: '0.5rem'
-    }}>
+          
+    <div style={{ marginTop: '1rem', width: '100%', maxWidth: '100%' }}>
+      <div style={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        marginBottom: '0.5rem'
+      }}>
       <span style={{ fontWeight: 'bold' }}>Generated Image</span>
-    </div>
-    <CCard style={{ padding: '1rem' }}>
-      <img 
-        src={figurePng} 
-        alt="Generated visualization" 
-        style={{ maxWidth: '100%' }}
-      />
-        </CCard>
-      </div>
-      )}
-
         </div>
+          <CCard style={{ padding: '1rem' }}>
+            <img 
+              src={figurePng} 
+              alt="Generated visualization" 
+              style={{ maxWidth: '100%' }}
+            />
+          </CCard>
+        </div>
+      </div>
       )}
     </CForm>
   );
