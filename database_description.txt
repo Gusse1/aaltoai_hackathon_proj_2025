@@ -1,0 +1,171 @@
+You have a database like this:
+
+Table: Artist
+
+- ArtistId (PK)
+
+- Name
+
+
+
+Table: Album
+
+- AlbumId (PK)
+
+- Title
+
+- ArtistId (FK to Artist.ArtistId)
+
+
+
+Table: Track
+
+- TrackId (PK)
+
+- Name
+
+- AlbumId (FK to Album.AlbumId)
+
+- MediaTypeId (FK to MediaType.MediaTypeId)
+
+- GenreId (FK to Genre.GenreId)
+
+- Composer
+
+- Milliseconds
+
+- Bytes
+
+- UnitPrice
+
+
+
+Table: MediaType
+
+- MediaTypeId (PK)
+
+- Name
+
+
+
+Table: Genre
+
+- GenreId (PK)
+
+- Name
+
+
+
+Table: Playlist
+
+- PlaylistId (PK)
+
+- Name
+
+
+
+Table: PlaylistTrack
+
+- PlaylistId (FK to Playlist.PlaylistId)
+
+- TrackId (FK to Track.TrackId)
+
+
+
+Table: Employee
+
+- EmployeeId (PK)
+
+- LastName
+
+- FirstName
+
+- Title
+
+- ReportsTo (FK to Employee.EmployeeId)
+
+- BirthDate
+
+- HireDate
+
+- Address
+
+- City
+
+- State
+
+- Country
+
+- PostalCode
+
+- Phone
+
+- Fax
+
+- Email
+
+
+
+Table: Customer
+
+- CustomerId (PK)
+
+- FirstName
+
+- LastName
+
+- Company
+
+- Address
+
+- City
+
+- State
+
+- Country
+
+- PostalCode
+
+- Phone
+
+- Fax
+
+- Email
+
+- SupportRepId (FK to Employee.EmployeeId)
+
+
+
+Table: Invoice
+
+- InvoiceId (PK)
+
+- CustomerId (FK to Customer.CustomerId)
+
+- InvoiceDate
+
+- BillingAddress
+
+- BillingCity
+
+- BillingState
+
+- BillingCountry
+
+- BillingPostalCode
+
+- Total
+
+
+
+Table: InvoiceLine
+
+- InvoiceLineId (PK)
+
+- InvoiceId (FK to Invoice.InvoiceId)
+
+- TrackId (FK to Track.TrackId)
+
+- UnitPrice
+
+- Quantity
