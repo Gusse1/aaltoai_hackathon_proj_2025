@@ -91,7 +91,6 @@ def main():
     else:
         print("Please provide a suitable question as command line argument.")
         sys.exit(1)
-    max_retries = 3
     top_k = None
 
     try:
@@ -128,6 +127,7 @@ def main():
 
     chain = create_sql_query_chain(llm, db, prompt=prompt)
 
+    max_retries = 3
     for attempt in range(max_retries):
         try:
             result = chain.invoke({
