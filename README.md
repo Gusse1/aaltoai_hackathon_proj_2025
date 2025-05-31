@@ -2,6 +2,7 @@
 <img width="1120" alt="monthly_sales" src="https://github.com/user-attachments/assets/72cfe1ea-04f6-4baa-9499-104356824e64" />
 https://youtu.be/vocSVp-AVtA
 
+
 This project is an AI-agent, which can answer questions from provided data. The agent can also produce visualizations when required and show the SQL code which was used to obtain the results. The agent should work with any kind of SQL database, but for testing we have used the Chinook Database (https://github.com/lerocha/chinook-database).
 
 We are using React and TypeScript for the frontend, Python and Flask for the backend, and LangChain and Huggingface for the LLM prompts. The LLM used for testing was DeepSeek-R1-Distill-Qwen-32B, but the agent works also with other LLM's at least with very minor modifications. We have a web-based user interface, which runs locally. Flask handles the linking between the backend and our UI. LangChain pipelines some of the inference steps by guiding the LLM to first extract the number of output elements and then using that information in the SQL queries.
