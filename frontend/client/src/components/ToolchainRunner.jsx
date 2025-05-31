@@ -4,6 +4,7 @@ import InputField from "../components/InputField.tsx";
 import { CButton, CCard, CCardTitle, CForm, CCollapse, CSpinner } from "@coreui/react";
 import { cilTerminal, cilCode, cilChevronBottom, cilChevronTop } from "@coreui/icons";
 import { CIcon } from "@coreui/icons-react";
+import figurePng from "../figure.png";
 
 function ToolchainRunner() {
   const [input, setInput] = useState('');
@@ -12,6 +13,7 @@ function ToolchainRunner() {
   const [showSql, setShowSql] = useState(false);
   const [showResults, setShowResults] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
+  const [imageUrl, setImageUrl] = useState('');
 
   const runToolchain = async () => {
     setIsLoading(true);
@@ -165,6 +167,25 @@ function ToolchainRunner() {
               }}>{sql}</pre>
             </CCard>
           </CCollapse>
+          {imageUrl && (
+  <div style={{ marginTop: '1rem', width: '50%', maxWidth: '50%' }}>
+    <div style={{ 
+      display: 'flex', 
+      alignItems: 'center', 
+      marginBottom: '0.5rem'
+    }}>
+      <span style={{ fontWeight: 'bold' }}>Generated Image</span>
+    </div>
+    <CCard style={{ padding: '1rem' }}>
+      <img 
+        src={figurePng} 
+        alt="Generated visualization" 
+        style={{ maxWidth: '100%' }}
+      />
+        </CCard>
+      </div>
+      )}
+
         </div>
       )}
     </CForm>
