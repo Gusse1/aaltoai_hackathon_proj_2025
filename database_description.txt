@@ -1,4 +1,4 @@
-This is the schema for Chinook dataset:
+# This is the schema for Chinook dataset:
 
 Table: Artist
 
