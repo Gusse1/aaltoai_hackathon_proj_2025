@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 import subprocess
+import re
 
 app = Flask(__name__)
 
@@ -7,7 +8,7 @@ app = Flask(__name__)
 def run_toolchain_post():
     try:
         data = request.get_json()
-        user_input =str(data.get('input', ''))
+        user_input = str(data.get('input', ''))
 
         result = subprocess.run(
             ["python3", "llm_g_toolchain.py", user_input],
@@ -15,9 +16,18 @@ def run_toolchain_post():
             text=True
         )
 
+        # Parse the output to separate SQL and results
+        output = result.stdout
+        sql_match = re.search(r'=== Generated SQL ===\n(.*?)\n=== Query Results ===', output, re.DOTALL)
+        results_match = re.search(r'=== Query Results ===\n(.*)', output, re.DOTALL)
+
+        sql = sql_match.group(1).strip() if sql_match else None
+        query_results = results_match.group(1).strip() if results_match else None
+
         return jsonify({
             "success": result.returncode == 0,
-            "output": result.stdout,
+            "sql": sql,
+            "results": query_results,
             "error": result.stderr
         })
 

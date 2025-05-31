@@ -25,12 +25,12 @@ def main():
         marker = "THE FINAL OUTPUT NUMBER BASED ON THIS USER INPUT IS:"
         marker_pos = text.find(marker)
 
-        if marker_pos != 0:  # If marker is found
+        if marker_pos != -1:  # Marker found anywhere in the text
             remaining_text = text[marker_pos + len(marker):]  # Get text after marker
-            numbers = [int(match) for match in re.findall(r'\b\d+\b', remaining_text)]
-            if numbers:
-                #print(numbers)
-                return numbers[0]  # Take first number after marker and clamp
+            number = re.search(r'\b\d+\b', remaining_text)
+            if number:
+                first_number = int(number.group(0))
+                return first_number
 
         return 0  # Return 0 if marker not found or no numbers after it
 
@@ -39,8 +39,8 @@ def main():
 
     #RULES:
     If the user clearly asks for a number of results (e.g., "top 5", "show 20", "I want 3"), return that number.
-    If there is not a number very clearly mentioned, immediately give 0 as output.
-    Do NOT guess or infer. Only extract the number from user input or return 0.
+    If there is not a number very clearly mentioned, but the input makes sense for a database query, then
+    infer a logical number (eg. 5). If the query makes no sense for a database query (eg. gibberish), then return 0.
 
     FORMAT:
     Return ONLY the number. No text, no explanation, no punctuation.
@@ -53,7 +53,7 @@ def main():
     Output: 10
 
     User: Who are the best artists?
-    Output: 0
+    Output: 5
 
     User: something
     Output: 0
