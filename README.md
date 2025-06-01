@@ -1,10 +1,10 @@
 # Database Angler - AaltoAI 2025 hackathon project
 <img width="1120" alt="monthly_sales" src="https://github.com/user-attachments/assets/72cfe1ea-04f6-4baa-9499-104356824e64" />
 
-# Demo video
+## Demo video
 https://youtu.be/vocSVp-AVtA
 
-# General information
+## General information
 
 This project is an AI-agent, which can answer questions from provided data. The agent can also produce visualizations when required and show the SQL code which was used to obtain the results. The agent should work with any kind of SQL database, but for testing we have used the Chinook Database (https://github.com/lerocha/chinook-database).
 
