@@ -181,7 +181,8 @@ def main():
                 #print(json_object)
                 return json_object
             except Exception as e:
-                raise
+                print(f"Error while extracting plot info: {e}")
+                return None
 
         return None
 
